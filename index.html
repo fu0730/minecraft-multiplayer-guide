@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Mod マルチプレイガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            line-height: 1.8;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 20px 60px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(circle at 30% 50%, rgba(46, 204, 113, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(52, 152, 219, 0.15) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+            background: linear-gradient(90deg, #2ecc71, #3498db, #2ecc71);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #aaa;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+        }
+
+        section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-left: 16px;
+            border-left: 4px solid #2ecc71;
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #2ecc71, #3498db);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .step-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .step-content p {
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+
+        .step-content code {
+            background: #0f3460;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #7eb8ff;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #2ecc71, #3498db);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 12px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.3);
+        }
+
+        .note-box {
+            background: #1c2e4a;
+            border: 1px solid #2d4a7a;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-top: 16px;
+        }
+
+        .note-box h4 {
+            color: #7eb8ff;
+            margin-bottom: 8px;
+        }
+
+        .note-box p {
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .role-card {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 24px;
+            border-top: 4px solid;
+        }
+
+        .role-card.host { border-color: #2ecc71; }
+        .role-card.guest { border-color: #3498db; }
+
+        .role-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+
+        .role-card.host h3 { color: #2ecc71; }
+        .role-card.guest h3 { color: #3498db; }
+
+        .role-card ol {
+            color: #aaa;
+            font-size: 0.95rem;
+            padding-left: 20px;
+        }
+
+        .role-card ol li {
+            margin-bottom: 8px;
+        }
+
+        .summary-box {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .summary-box p {
+            color: #aaa;
+            font-size: 1rem;
+        }
+
+        .summary-box strong {
+            color: #2ecc71;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+            padding-left: 28px;
+            position: relative;
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+
+        .checklist li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #2ecc71;
+            border-radius: 3px;
+        }
+
+        .trouble-item {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 12px;
+        }
+
+        .trouble-item h4 {
+            color: #e94560;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .trouble-item p {
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: #555;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 1.8rem; }
+            .step { flex-direction: column; gap: 12px; }
+            .role-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <div class="hero-content">
+        <h1>マルチプレイガイド</h1>
+        <p>Mod入りのマイクラを友達と一緒に遊ぶための手順をまとめました。サーバー不要、ポート開放不要！</p>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- Overview -->
+    <section>
+        <h2 class="section-title">Essential Mod を使います</h2>
+        <div class="step">
+            <div class="step-content">
+                <p><strong>Essential</strong> は、サーバーを立てなくても友達とマルチプレイできる無料Modです。ホスト側が招待リンクを送るだけで、相手が参加できます。ポート開放もいりません。</p>
+                <p style="margin-top: 8px;">他のMod（Gacha Craftなど）と一緒に使えます。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- What you need -->
+    <section>
+        <h2 class="section-title">必要なもの（2人とも共通）</h2>
+        <ul class="checklist">
+            <li>Minecraft Java Edition（PC版）</li>
+            <li>Forge 1.20.1 がインストール済み</li>
+            <li>遊びたいMod（Gacha Craftなど）がmodsフォルダに入っている</li>
+            <li>Essential Mod（下の手順でインストール）</li>
+        </ul>
+        <div class="note-box">
+            <h4>Forgeの導入がまだの場合</h4>
+            <p>各Modのサイトに Forge のインストール手順が載っています。先にそちらを済ませてください。</p>
+        </div>
+    </section>
+
+    <!-- Install Essential -->
+    <section>
+        <h2 class="section-title">Essential Mod の導入</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Essential インストーラーをダウンロード</h3>
+                    <p>下のボタンからインストーラーをダウンロードします。</p>
+                    <a href="https://essential.gg/download" class="download-btn" target="_blank" rel="noopener">Essential をダウンロード</a>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>インストーラーを実行</h3>
+                    <p>ダウンロードしたファイルを開いて、指示に従ってインストールします。Forge 1.20.1 が自動で検出されます。</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Minecraftを起動して確認</h3>
+                    <p>Forge 1.20.1 で起動して、タイトル画面の右上に Essential のアイコンが表示されていればOK！</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to play together -->
+    <section>
+        <h2 class="section-title">一緒に遊ぶ手順</h2>
+
+        <div class="role-grid">
+            <div class="role-card host">
+                <h3>ホスト（招待する側）</h3>
+                <ol>
+                    <li>シングルプレイでワールドを開く</li>
+                    <li>Escキーでメニューを開く</li>
+                    <li>「Invite Friends」をクリック</li>
+                    <li>招待リンクをコピーして相手に送る</li>
+                </ol>
+            </div>
+            <div class="role-card guest">
+                <h3>ゲスト（参加する側）</h3>
+                <ol>
+                    <li>送られてきたリンクをクリック</li>
+                    <li>Minecraftが開いて自動で接続される</li>
+                    <li>遊ぶ！</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="summary-box">
+            <p>お互いに<strong>同じModを入れておく</strong>のを忘れずに！</p>
+        </div>
+    </section>
+
+    <!-- Troubleshooting -->
+    <section>
+        <h2 class="section-title">うまくいかないとき</h2>
+
+        <div class="trouble-item">
+            <h4>「Invite Friends」が出ない</h4>
+            <p>Essential Modが正しくインストールされていない可能性があります。もう一度インストーラーを実行してみてください。</p>
+        </div>
+
+        <div class="trouble-item">
+            <h4>相手が接続できない</h4>
+            <p>お互いのModのバージョンが一致しているか確認してください。Forgeのバージョン（1.20.1）と、入れているModが同じである必要があります。</p>
+        </div>
+
+        <div class="trouble-item">
+            <h4>接続はできるがModが動いていない</h4>
+            <p>ゲスト側のmodsフォルダにもModのjarファイルが入っているか確認してください。ホスト側だけに入れても、ゲスト側には適用されません。</p>
+        </div>
+
+        <div class="trouble-item">
+            <h4>ラグがひどい</h4>
+            <p>ホスト側のインターネット回線に依存します。Wi-Fiよりも有線接続の方が安定します。</p>
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    Minecraft Mod Multiplayer Guide by Fu
+</footer>
+
+</body>
+</html>
